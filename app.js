@@ -6,7 +6,7 @@ const express = require('express'),
   app = express();
 
 mongoose.connect('mongodb://localhost/yelpcamp');
-seedDB();
+// seedDB();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,6 +54,8 @@ app.post('/campgrounds', (req, res) => {
   });
 });
 
-app.listen(process.env.PORT, process.env.IP, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log('Server Started');
 });

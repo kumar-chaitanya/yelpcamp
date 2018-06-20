@@ -46,14 +46,7 @@ module.exports = function() {
               }
               else {
                 camp.comments.push(comment);
-                camp.save((err, finalCamp) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  else {
-                    console.log(finalCamp);
-                  }
-                })
+                camp.save();
               }
             });
           }

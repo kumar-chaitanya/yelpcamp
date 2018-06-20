@@ -1,12 +1,31 @@
 <% include partials/header %>
-  <div class="container">
-    <div class="card p-2 mx-auto mb-2">
-      <img class="img-fluid rounded" src="<%= camp.src %>" alt="<%= camp.title %>">
-      <div class="card-body">
-        <h4><%= camp.title %></h4>
-        <p class="lead"><%= camp.description %></p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4 col-md-3 mb-3">
+      <ul class="list-group">
+        <li class="list-group-item active">Info 1</li>
+        <li class="list-group-item">Info 2</li>
+        <li class="list-group-item">Info 3</li>
+      </ul>
+    </div>
+    <div class="col-lg-8 col-md-9">
+      <div class="card mb-3">
+        <img class="card-img-top" src="<%= camp.src %>" alt="<%= camp.title %>">
+        <div class="card-body">
+          <h4>
+            <%= camp.title %>
+          </h4>
+          <h5 class="card-text float-right">$10.99</h5>
+          <p class="lead">
+            <%= camp.description %>
+          </p>
+        </div>
       </div>
     </div>
-    <a href="/campgrounds">Go Back</a>
   </div>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="#" class="btn btn-success btn-md">Add New Comment</a>
+  </div>
+  <a href="/campgrounds" class="float-right">Go Back <i class="fas fa-arrow-right"></i></a>
+</div>
 <% include partials/footer %>
