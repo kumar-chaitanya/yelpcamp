@@ -12,69 +12,17 @@ mongoose.connect('mongodb://localhost/yelpcamp');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.locals.moment = require('moment');
+app.use((req, res, next) => {
+  app.locals.moment = require('moment');
+  next();
+});
 
 app.get('/', (req, res) => {
   res.render('home');
 });
 
-app.get('/campgrounds', (req, res) => {
-  Campground.find({}, (err, camps) => {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.render('camps', { camps });
-    }
-  });
-});
-
-app.get('/campgrounds/new', (req, res) => {
-  res.render('form');
-});
-
-app.get('/campgrounds/:id', (req, res) => {
-  Campground.findById(req.params.id).populate('comments').exec((err, camp) => {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.render('show', { camp });
-      console.log(camp);
-    }
-  });
-});
-
-app.post('/campgrounds', (req, res) => {
-  Campground.create(req.body, (err, camp) => {
-    if (err) {
-      console.log(err);
-    }
-    else {
-      res.redirect('/campgrounds');
-    }
-  });
-});
-
-app.post('/campgrounds/:id/comments', (req, res) => {
-  Campground.findById(req.params.id, (err, camp) => {
-    if(err) {
-      console.log(err);
-      return res.redirect('/campgrounds');
-    }
-
-    Comment.create(req.body.comment, (err, comment) => {
-      if(err) {
-        console.log(err);
-        return res.redirect(`/campgrounds/${req.params.id}`);
-      }
-
-      camp.comments.push(comment);
-      camp.save();
-      res.redirect(`/campgrounds/${req.params.id}`);
-    });
-  });
-});
+app.use('/campgrounds', require('./routes/campground'));
+app.use('/campgrounds/:id/comments', require('./routes/comment'));
 
 const PORT = process.env.PORT || 3000;
 
