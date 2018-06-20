@@ -1,0 +1,12 @@
+<% include partials/header %>
+  <div class="container">
+    <div class="card p-2 mx-auto mb-2">
+      <img class="img-fluid rounded" src="<%= camp.src %>" alt="<%= camp.title %>">
+      <div class="card-body">
+        <h4><%= camp.title %></h4>
+        <p class="lead"><%= camp.description %></p>
+      </div>
+    </div>
+    <a href="/campgrounds">Go Back</a>
+  </div>
+<% include partials/footer %>
