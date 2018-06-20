@@ -22,29 +22,47 @@
         </div>
       </div>
       <div class="d-flex justify-content-end mb-3">
-        <a href="#" class="btn btn-success btn-md">Add New Comment</a>
+        <button class="btn btn-success btn-md" type="button" data-toggle="collapse" data-target="#commentform" aria-expanded="false" aria-controls="commentform">Add New Comment</button>
       </div>
-      <div class="card bg-light mb-3">
-        <div class="row">
-          <% camp.comments.forEach((comment) => { %>
-            <div class="col-md-12">
-              <div class="card-body">
-                <strong>
-                  <%= comment.author %>
-                </strong>
-                <p class="float-right">
-                  <%= moment(comment.date).fromNow() %>
-                </p>
-                <p>
-                  <%= comment.body %>
-                </p>
-              </div>
+      <div class="collapse" id="commentform">
+        <div class="card p-2 mb-3">
+          <form action="/campgrounds/<%= camp._id %>/comments" method="POST">
+            <div class="form-group">
+              <label for="author">Author</label>
+              <input type="text" class="form-control" id="author" name="comment[author]" placeholder="Author" required>
             </div>
-            <% }) %>
+            <div class="form-group">
+              <label for="body">Description</label>
+              <textarea id="body" class="form-control" placeholder="Comment body" name="comment[body]"></textarea>
+            </div>
+            <button class="btn btn-success float-right">Post Comment</button>
+          </form>
+        </div>
+      </div>
+      <div class="card bg-dark mb-3 text-white p-1">
+        <% if (camp.comments.length === 0) { %>
+          <em>No comments yet.</em>
+        <% } %>
+          <div class="row">
+            <% camp.comments.forEach((comment) => { %>
+              <div class="col-md-12">
+                <div class="card-body">
+                  <strong>
+                    <%= comment.author %>
+                  </strong>
+                  <p class="float-right">
+                    <%= moment(comment.date).fromNow() %>
+                  </p>
+                  <p>
+                    <%= comment.body %>
+                  </p>
+                </div>
+              </div>
+              <% }) %>
+            </div>
           </div>
         </div>
       </div>
+      <a href="/campgrounds" class="float-right">Go Back <i class="fas fa-arrow-right"></i></a>
     </div>
-    <a href="/campgrounds" class="float-right">Go Back <i class="fas fa-arrow-right"></i></a>
-  </div>
-  <% include partials/footer %>
+    <% include partials/footer %>

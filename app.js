@@ -2,6 +2,7 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   mongoose = require('mongoose'),
   Campground = require('./models/campground'),
+  Comment = require('./models/comment'),
   seedDB = require('./seeds'),
   app = express();
 
@@ -52,6 +53,26 @@ app.post('/campgrounds', (req, res) => {
     else {
       res.redirect('/campgrounds');
     }
+  });
+});
+
+app.post('/campgrounds/:id/comments', (req, res) => {
+  Campground.findById(req.params.id, (err, camp) => {
+    if(err) {
+      console.log(err);
+      return res.redirect('/campgrounds');
+    }
+
+    Comment.create(req.body.comment, (err, comment) => {
+      if(err) {
+        console.log(err);
+        return res.redirect(`/campgrounds/${req.params.id}`);
+      }
+
+      camp.comments.push(comment);
+      camp.save();
+      res.redirect(`/campgrounds/${req.params.id}`);
+    });
   });
 });
 

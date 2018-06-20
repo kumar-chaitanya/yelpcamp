@@ -2,3 +2,10 @@
   display: flex;
 }
 
+.col-md-12 div.card-body {
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.col-md-12:last-of-type div.card-body:last-of-type {
+  border: 0;
+}
