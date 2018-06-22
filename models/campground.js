@@ -13,10 +13,22 @@ const campSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  price: Number,
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
-  }]
+  }],
+  createdOn: {
+    type: Date,
+    default: Date.now
+  },
+  author: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    username: String
+  }
 });
 
 module.exports = mongoose.model('Campground', campSchema);

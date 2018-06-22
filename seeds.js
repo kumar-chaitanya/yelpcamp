@@ -36,20 +36,6 @@ module.exports = function() {
           if (err) {
             console.log(err);
           }
-          else {
-            Comment.create({
-              author: 'Chaitanya',
-              body: 'What a nice place to camp....... :O'
-            }, (err, comment) => {
-              if (err) {
-                console.log(err);
-              }
-              else {
-                camp.comments.push(comment);
-                camp.save();
-              }
-            });
-          }
         });
       });
     }

@@ -12,12 +12,15 @@
       <div class="card mb-3">
         <img class="card-img-top" src="<%= camp.src %>" alt="<%= camp.title %>">
         <div class="card-body">
-          <h5 class="card-text float-right">$10.99</h5>
+          <p class="lead float-right">$<%= camp.price %>/night</p>
           <h4>
             <%= camp.title %>
           </h4>
           <p class="lead">
             <%= camp.description %>
+          </p>
+          <p>
+            <em>Created By <%= camp.author.username %> - <%= camp.createdOn.toDateString() %></em>
           </p>
         </div>
       </div>
@@ -29,11 +32,15 @@
           <form action="/campgrounds/<%= camp._id %>/comments" method="POST">
             <div class="form-group">
               <label for="author">Author</label>
-              <input type="text" class="form-control" id="author" name="comment[author]" placeholder="Author" required>
+              <input type="text" class="form-control" id="author" placeholder="Author" disabled="true" value="<%= currentUser ? currentUser.name : '' %>">
             </div>
             <div class="form-group">
               <label for="body">Description</label>
-              <textarea id="body" class="form-control" placeholder="Comment body" name="comment[body]"></textarea>
+              <% if(currentUser) { %>
+                <textarea id="body" class="form-control" placeholder="Comment body" name="body"></textarea>
+              <% } else { %>
+                <textarea id="body" class="form-control" placeholder="Comment body" name="body" disabled required></textarea>
+              <% } %>
             </div>
             <button class="btn btn-success float-right">Post Comment</button>
           </form>
@@ -48,7 +55,7 @@
               <div class="col-md-12">
                 <div class="card-body">
                   <strong>
-                    <%= comment.author %>
+                    <%= comment.author.username %>
                   </strong>
                   <p class="float-right">
                     <%= moment(comment.date).fromNow() %>
