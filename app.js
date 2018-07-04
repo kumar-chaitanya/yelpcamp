@@ -7,6 +7,7 @@ const express = require('express'),
   seedDB = require('./seeds'),
   passport = require('passport'),
   localStrategy = require('passport-local').Strategy,
+  methodOverride = require('method-override'),
   app = express();
 
 mongoose.connect('mongodb://localhost/yelpcamp');
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
   app.locals.currentUser = req.user;
   next();
 });
+app.use(methodOverride('_method'));
 
 app.get('/', (req, res) => {
   res.render('home');

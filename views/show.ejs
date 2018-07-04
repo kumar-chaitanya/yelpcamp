@@ -22,54 +22,69 @@
           <p>
             <em>Created By <%= camp.author.username %> - <%= camp.createdOn.toDateString() %></em>
           </p>
-        </div>
-      </div>
-      <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-success btn-md" type="button" data-toggle="collapse" data-target="#commentform" aria-expanded="false" aria-controls="commentform">Add New Comment</button>
-      </div>
-      <div class="collapse" id="commentform">
-        <div class="card p-2 mb-3">
-          <form action="/campgrounds/<%= camp._id %>/comments" method="POST">
-            <div class="form-group">
-              <label for="author">Author</label>
-              <input type="text" class="form-control" id="author" placeholder="Author" disabled="true" value="<%= currentUser ? currentUser.name : '' %>">
-            </div>
-            <div class="form-group">
-              <label for="body">Description</label>
-              <% if(currentUser) { %>
-                <textarea id="body" class="form-control" placeholder="Comment body" name="body"></textarea>
-              <% } else { %>
-                <textarea id="body" class="form-control" placeholder="Comment body" name="body" disabled required></textarea>
-              <% } %>
-            </div>
-            <button class="btn btn-success float-right">Post Comment</button>
-          </form>
-        </div>
-      </div>
-      <div class="card bg-dark mb-3 text-white p-1">
-        <% if (camp.comments.length === 0) { %>
-          <em>No comments yet.</em>
-        <% } %>
-          <div class="row">
-            <% camp.comments.forEach((comment) => { %>
-              <div class="col-md-12">
-                <div class="card-body">
-                  <strong>
-                    <%= comment.author.username %>
-                  </strong>
-                  <p class="float-right">
-                    <%= moment(comment.date).fromNow() %>
-                  </p>
-                  <p>
-                    <%= comment.body %>
-                  </p>
-                </div>
-              </div>
-              <% }) %>
-            </div>
+          <% if(currentUser && camp.author.id.equals(currentUser._id)) { %>
+            <a href="/campgrounds/<%= camp._id %>/edit"><i class="fas fa-edit text-warning"></i></a>
+            <form action="/campgrounds/<%= camp._id %>/?_method=DELETE" method="POST" class="delete-form-btn">
+              <button><i class="fas fa-trash text-danger"></i></button>
+            </form>
+            <% } %>
           </div>
         </div>
-      </div>
-      <a href="/campgrounds" class="float-right">Go Back <i class="fas fa-arrow-right"></i></a>
-    </div>
-    <% include partials/footer %>
+        <div class="d-flex justify-content-end mb-3">
+          <button class="btn btn-success btn-md" type="button" data-toggle="collapse" data-target="#commentform" aria-expanded="false" aria-controls="commentform">Add New Comment</button>
+        </div>
+        <div class="collapse" id="commentform">
+          <div class="card p-2 mb-3">
+            <form action="/campgrounds/<%= camp._id %>/comments" method="POST">
+              <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" class="form-control" id="author" placeholder="Author" disabled="true" value="<%= currentUser ? currentUser.name : '' %>">
+              </div>
+              <div class="form-group">
+                <label for="body">Description</label>
+                <% if(currentUser) { %>
+                  <textarea id="body" class="form-control" placeholder="Comment body" name="body"></textarea>
+                  <% } else { %>
+                    <textarea id="body" class="form-control" placeholder="Comment body" name="body" disabled required></textarea>
+                    <h6 class="mt-2 text-info"><em>Please login/signup to add comments</em></h6>
+                    <% } %>
+                  </div>
+                  <button class="btn btn-success float-right">Post Comment</button>
+                </form>
+              </div>
+            </div>
+            <div class="card bg-dark mb-3 text-white p-1">
+              <% if (camp.comments.length === 0) { %>
+                <em>No comments yet.</em>
+                <% } %>
+                <div class="row">
+                  <% camp.comments.forEach((comment) => { %>
+                    <div class="col-md-12">
+                      <div class="card-body">
+                        <strong>
+                          <%= comment.author.username %>
+                        </strong>
+                        <p class="float-right">
+                          <%= moment(comment.date).fromNow() %>
+                        </p>
+                        <p>
+                          <%= comment.body %>
+                        </p>
+                        <a href="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/edit">
+                          <i class="fas fa-edit text-warning"></i>
+                        </a>
+                        <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/?_method=DELETE" method="POST" class="delete-form-btn">
+                          <button style="background-color: #343a40;">
+                            <i class="fas fa-trash text-danger"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                    <% }) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a href="/campgrounds" class="float-right">Go Back <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <% include partials/footer %>

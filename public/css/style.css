@@ -9,3 +9,14 @@
 .col-md-12:last-of-type div.card-body:last-of-type {
   border: 0;
 }
+
+form.delete-form-btn {
+  display: inline;
+}
+
+form.delete-form-btn button {
+  background-color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
