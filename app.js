@@ -10,6 +10,7 @@ const express = require('express'),
   methodOverride = require('method-override'),
   session = require('express-session'),
   back = require('express-back'),
+  flash = require('connect-flash'),
   app = express();
 
 mongoose.connect('mongodb://localhost/yelpcamp');
@@ -23,6 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());

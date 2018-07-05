@@ -1,5 +1,6 @@
 const router = require('express').Router(),
-  Campground = require('../models/campground');
+  Campground = require('../models/campground'),
+  middleware = require('../middleware');
 
 router.get('/', (req, res) => {
   Campground.find({}, (err, camps) => {
@@ -12,7 +13,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/new', isLoggedIn, (req, res) => {
+router.get('/new', middleware.isLoggedIn, (req, res) => {
   res.render('form');
 });
 
@@ -32,7 +33,7 @@ router.get('/:id', (req, res) => {
   });
 });
 
-router.post('/', isLoggedIn, (req, res) => {
+router.post('/', middleware.isLoggedIn, (req, res) => {
   req.body.camp.author = {
     id: req.user._id,
     username: req.user.name
@@ -46,13 +47,13 @@ router.post('/', isLoggedIn, (req, res) => {
   });
 });
 
-router.get('/:id/edit', checkCampOwnership, (req, res) => {
+router.get('/:id/edit', middleware.checkCampOwnership, (req, res) => {
   Campground.findById(req.params.id, (err, camp) => {
     res.render('edit', {camp});
   })
 });
 
-router.put('/:id', checkCampOwnership, (req, res) => {
+router.put('/:id', middleware.checkCampOwnership, (req, res) => {
   Campground.findByIdAndUpdate(req.params.id, req.body.camp, (err, camp) => {
     if(err || !camp) {
       console.log(err);
@@ -62,7 +63,7 @@ router.put('/:id', checkCampOwnership, (req, res) => {
   });
 });
 
-router.delete('/:id', checkCampOwnership, (req, res) => {
+router.delete('/:id', middleware.checkCampOwnership, (req, res) => {
   Campground.findByIdAndRemove(req.params.id, err => {
     if(err) {
       console.log(err);
@@ -71,32 +72,5 @@ router.delete('/:id', checkCampOwnership, (req, res) => {
     res.redirect('/campgrounds');
   })
 })
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.redirect('/users/login');
-  }
-}
-
-function checkCampOwnership(req, res, next) {
-  if (req.isAuthenticated()) {
-    Campground.findById(req.params.id, (err, camp) => {
-      if (err || !camp) {
-        console.log(err);
-        return res.back();
-      }
-
-      if (camp.author.id.equals(req.user._id)) {
-        next();
-      } else {
-        res.send('Permission denied');
-      }
-    });
-  } else {
-    res.redirect('/users/login');
-  }
-}
 
 module.exports = router;

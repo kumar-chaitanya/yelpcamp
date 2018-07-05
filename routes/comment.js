@@ -1,8 +1,9 @@
 const router = require('express').Router({mergeParams: true}),
   Campground = require('../models/campground'),
-  Comment = require('../models/comment');
+  Comment = require('../models/comment'),
+  middleware = require('../middleware');
 
-router.post('/', isLoggedIn, (req, res) => {
+router.post('/', middleware.isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, camp) => {
     if (err) {
       console.log(err);
@@ -32,7 +33,7 @@ router.post('/', isLoggedIn, (req, res) => {
   });
 });
 
-router.get('/:comment_id/edit', checkCommentOwnership, (req, res) => {
+router.get('/:comment_id/edit', middleware.checkCommentOwnership, (req, res) => {
   Campground.findById(req.params.id, (err, camp) => {
     if(err || !camp) {
       console.log(err);
@@ -51,7 +52,7 @@ router.get('/:comment_id/edit', checkCommentOwnership, (req, res) => {
   });
 });
 
-router.put('/:comment_id', checkCommentOwnership, (req, res) => {
+router.put('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
   Comment.findById(req.params.comment_id, (err, comment) => {
     if(err || !comment) {
       return res.redirect(`/campgrounds/${req.params.id}`);
@@ -62,7 +63,7 @@ router.put('/:comment_id', checkCommentOwnership, (req, res) => {
   })
 });
 
-router.delete('/:comment_id', checkCommentOwnership, (req, res) => {
+router.delete('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
   Comment.findByIdAndRemove(req.params.comment_id, err => {
     if(err) {
       console.log(err);
@@ -71,31 +72,5 @@ router.delete('/:comment_id', checkCommentOwnership, (req, res) => {
     res.redirect(`/campgrounds/${req.params.id}`);
   });
 })
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.redirect('/users/login');
-  }
-}
-
-function checkCommentOwnership(req, res, next) {
-  if(req.isAuthenticated()) {
-    Comment.findById(req.params.comment_id, (err, comment) => {
-      if(err || !comment) {
-        return res.redirect(`/campgrounds/${req.params.id}`);
-      }
-      
-      if(comment.author.id.equals(req.user._id)) {
-        next();
-      } else {
-        res.redirect(`/campgrounds/${req.params.id}`);
-      }
-    });
-  } else {
-    res.redirect('/users/login');
-  }
-}
 
 module.exports = router;
