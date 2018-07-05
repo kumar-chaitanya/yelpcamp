@@ -36,12 +36,12 @@ router.get('/:comment_id/edit', checkCommentOwnership, (req, res) => {
   Campground.findById(req.params.id, (err, camp) => {
     if(err || !camp) {
       console.log(err);
-      return res.redirect('back');
+      return res.back();
     }
     Comment.findById(req.params.comment_id, (err, comment) => {
       if(err || !comment) {
         console.log(err);
-        return res.redirect('back');
+        return res.back();
       }
       res.render('commentedit', {
         camp,

@@ -8,6 +8,8 @@ const express = require('express'),
   passport = require('passport'),
   localStrategy = require('passport-local').Strategy,
   methodOverride = require('method-override'),
+  session = require('express-session'),
+  back = require('express-back'),
   app = express();
 
 mongoose.connect('mongodb://localhost/yelpcamp');
@@ -16,7 +18,7 @@ mongoose.connect('mongodb://localhost/yelpcamp');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(require('express-session')({
+app.use(session({
   secret: 'I am afraid of dogs but love puppies',
   resave: false,
   saveUninitialized: false
@@ -32,6 +34,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(methodOverride('_method'));
+app.use(back());
 
 app.get('/', (req, res) => {
   res.render('home');

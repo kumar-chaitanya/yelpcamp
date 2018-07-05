@@ -40,7 +40,7 @@ router.post('/', isLoggedIn, (req, res) => {
   Campground.create(req.body.camp, (err, camp) => {
     if (err) {
       console.log(err);
-      return res.redirect('back');
+      return res.back();
     }
     res.redirect('/campgrounds');
   });
@@ -85,7 +85,7 @@ function checkCampOwnership(req, res, next) {
     Campground.findById(req.params.id, (err, camp) => {
       if (err || !camp) {
         console.log(err);
-        return res.redirect('back');
+        return res.back();
       }
 
       if (camp.author.id.equals(req.user._id)) {
