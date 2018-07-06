@@ -21,6 +21,7 @@ router.get('/:id', (req, res) => {
   Campground.findById(req.params.id).populate('comments').exec((err, camp) => {
     if (err || !camp) {
       console.log(err);
+      req.flash('error', 'Campground not found');
       res.redirect('/campgrounds');
     }
     else {

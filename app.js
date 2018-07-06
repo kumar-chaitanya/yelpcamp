@@ -19,12 +19,12 @@ mongoose.connect('mongodb://localhost/yelpcamp');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+app.use(flash());
 app.use(session({
   secret: 'I am afraid of dogs but love puppies',
   resave: false,
   saveUninitialized: false
 }));
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
@@ -33,6 +33,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   app.locals.moment = require('moment');
   app.locals.currentUser = req.user;
+  app.locals.error = req.flash('error');
+  app.locals.success = req.flash('success');
   next();
 });
 app.use(methodOverride('_method'));
