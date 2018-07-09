@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express'),
   bodyParser = require('body-parser'),
   mongoose = require('mongoose'),
@@ -48,7 +50,7 @@ app.use('/campgrounds', require('./routes/campground'));
 app.use('/campgrounds/:id/comments', require('./routes/comment'));
 app.use('/users', require('./routes/auth'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log('Server Started');

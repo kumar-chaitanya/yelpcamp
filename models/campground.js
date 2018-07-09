@@ -28,7 +28,10 @@ const campSchema = new mongoose.Schema({
       ref: 'User'
     },
     username: String
-  }
+  },
+  lat: Number,
+  lng: Number,
+  location: String
 });
 
 module.exports = mongoose.model('Campground', campSchema);

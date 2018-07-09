@@ -1,6 +1,16 @@
 const router = require('express').Router(),
   Campground = require('../models/campground'),
-  middleware = require('../middleware');
+  middleware = require('../middleware'),
+  NodeGeocoder = require('node-geocoder');
+
+const options = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: process.env.GEOCODER_API_KEY,
+  formatter: null
+};
+
+const geocoder = NodeGeocoder(options);
 
 router.get('/', (req, res) => {
   Campground.find({}, (err, camps) => {
@@ -39,12 +49,24 @@ router.post('/', middleware.isLoggedIn, (req, res) => {
     id: req.user._id,
     username: req.user.name
   };
-  Campground.create(req.body.camp, (err, camp) => {
-    if (err) {
-      console.log(err);
+
+  geocoder.geocode(req.body.camp.location, (err, coord) => {
+    if(err || !coord.length) {
+      req.flash('error', 'Invalid address');
       return res.back();
     }
-    res.redirect('/campgrounds');
+
+    req.body.camp.lat = coord[0].latitude;
+    req.body.camp.lng = coord[0].longitude;
+    req.body.camp.location = coord[0].formattedAddress;
+
+    Campground.create(req.body.camp, (err, camp) => {
+      if (err) {
+        console.log(err);
+        return res.back();
+      }
+      res.redirect('/campgrounds');
+    });
   });
 });
 
@@ -55,12 +77,24 @@ router.get('/:id/edit', middleware.checkCampOwnership, (req, res) => {
 });
 
 router.put('/:id', middleware.checkCampOwnership, (req, res) => {
-  Campground.findByIdAndUpdate(req.params.id, req.body.camp, (err, camp) => {
-    if(err || !camp) {
-      console.log(err);
-      return res.redirect('/campgrounds');
+  geocoder.geocode(req.body.camp.location, (err, coord) => {
+    if(err || !coord.length) {
+      req.flash('error', 'Invalid Address');
+      return res.back();
     }
-    res.redirect(`/campgrounds/${req.params.id}`);
+
+    req.body.camp.lat = coord[0].latitude;
+    req.body.camp.lng = coord[0].longitude;
+    req.body.camp.location = coord[0].formattedAddress;
+
+    Campground.findByIdAndUpdate(req.params.id, req.body.camp, (err, camp) => {
+      if (err || !camp) {
+        console.log(err);
+        return res.redirect('/campgrounds');
+      }
+      res.redirect(`/campgrounds/${req.params.id}`);
+    });
+
   });
 });
 

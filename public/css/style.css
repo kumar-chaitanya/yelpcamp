@@ -20,3 +20,8 @@ form.delete-form-btn button {
   outline: none;
   cursor: pointer;
 }
+
+#map {
+  width: 100%;
+  height: 400px;
+}

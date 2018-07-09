@@ -30,7 +30,7 @@ router.post('/', middleware.isLoggedIn, (req, res) => {
 
       camp.comments.push(comment);
       camp.save();
-      req.flash('success', 'COmment added successfully');
+      req.flash('success', 'Comment added successfully');
       res.redirect(`/campgrounds/${req.params.id}`);
     });
   });
@@ -72,7 +72,7 @@ router.delete('/:comment_id', middleware.checkCommentOwnership, (req, res) => {
       console.log(err);
       return res.redirect(`/campgrounds/${req.params.id}`);
     }
-    req.flash('suucess', 'Comment deleted');
+    req.flash('success', 'Comment deleted');
     res.redirect(`/campgrounds/${req.params.id}`);
   });
 })
