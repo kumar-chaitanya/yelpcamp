@@ -15,7 +15,7 @@ const express = require('express'),
   flash = require('connect-flash'),
   app = express();
 
-mongoose.connect('mongodb://localhost/yelpcamp');
+mongoose.connect('mongodb://localhost:27017/yelpcamp', { useNewUrlParser: true });
 // seedDB();
 
 app.set('view engine', 'ejs');

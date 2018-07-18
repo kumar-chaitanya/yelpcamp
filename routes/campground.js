@@ -13,14 +13,28 @@ const options = {
 const geocoder = NodeGeocoder(options);
 
 router.get('/', (req, res) => {
-  Campground.find({}, (err, camps) => {
-    if (err) {
-      console.log(err);
-    }
-    else {
+  if(req.query.search) {
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    Campground.find({'title': regex}, (err, camps) => {
+      if (err) {
+        return console.log(err);
+      }
+      else if (!camps.length) {
+        req.flash('error', `No Campground found for '${req.query.search}'`);
+        return res.redirect('/campgrounds');
+      }
       res.render('camps', { camps });
-    }
-  });
+    });
+  } else {
+    Campground.find({}, (err, camps) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        res.render('camps', { camps });
+      }
+    });
+  }
 });
 
 router.get('/new', middleware.isLoggedIn, (req, res) => {
@@ -106,6 +120,10 @@ router.delete('/:id', middleware.checkCampOwnership, (req, res) => {
     }
     res.redirect('/campgrounds');
   })
-})
+});
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 module.exports = router;

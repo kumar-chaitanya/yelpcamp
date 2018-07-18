@@ -1,0 +1,18 @@
+<% include partials/header %>
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-6 mx-auto">
+        <form action="/users/forgot" method="POST">
+          <legend>Forgot Password?</legend>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required autofocus>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-info btn-md">Reset Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<% include partials/footer %>
