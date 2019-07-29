@@ -16,8 +16,10 @@ const express = require('express'),
   app = express();
 
 mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useCreateIndex: true
+  useNewUrlParser: true
+  // useCreateIndex: true
+}).then(() => {
+  console.log("Connected to DB");
 });
 // mongoose.connect('mongodb://localhost:27017/yelpcamp', { useNewUrlParser: true });
 // seedDB();
