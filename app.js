@@ -15,13 +15,13 @@ const express = require('express'),
   flash = require('connect-flash'),
   app = express();
 
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true
-  // useCreateIndex: true
-}).then(() => {
-  console.log("Connected to DB");
-});
-// mongoose.connect('mongodb://localhost:27017/yelpcamp', { useNewUrlParser: true });
+// mongoose.connect(process.env.MONGO_URL, {
+//   useNewUrlParser: true
+//   // useCreateIndex: true
+// }).then(() => {
+//   console.log("Connected to DB");
+// });
+mongoose.connect('mongodb://localhost:27017/yelpcamp', { useNewUrlParser: true });
 // seedDB();
 
 app.set('view engine', 'ejs');
